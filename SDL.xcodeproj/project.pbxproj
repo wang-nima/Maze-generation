@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DDA9DEC31BCCD808002FB2E7 /* SDL2_image.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA9DEC21BCCD808002FB2E7 /* SDL2_image.framework */; };
 		DDDAF9E91BCCCDC6002042EA /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DDDAF9E81BCCCDC6002042EA /* main.cpp */; };
 		DDDAF9F01BCCD06D002042EA /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDAF9EF1BCCD06D002042EA /* SDL2.framework */; };
-		DDDAF9F21BCCD0BB002042EA /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDDAF9F11BCCD0BB002042EA /* Cocoa.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,10 +25,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		DDA9DEC21BCCD808002FB2E7 /* SDL2_image.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_image.framework; path = ../../Library/Frameworks/SDL2_image.framework; sourceTree = "<group>"; };
 		DDDAF9E51BCCCDC6002042EA /* SDL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SDL; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDDAF9E81BCCCDC6002042EA /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		DDDAF9EF1BCCD06D002042EA /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
-		DDDAF9F11BCCD0BB002042EA /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,7 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DDDAF9F21BCCD0BB002042EA /* Cocoa.framework in Frameworks */,
+				DDA9DEC31BCCD808002FB2E7 /* SDL2_image.framework in Frameworks */,
 				DDDAF9F01BCCD06D002042EA /* SDL2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -47,7 +47,7 @@
 		DDDAF9DC1BCCCDC6002042EA = {
 			isa = PBXGroup;
 			children = (
-				DDDAF9F11BCCD0BB002042EA /* Cocoa.framework */,
+				DDA9DEC21BCCD808002FB2E7 /* SDL2_image.framework */,
 				DDDAF9EF1BCCD06D002042EA /* SDL2.framework */,
 				DDDAF9E71BCCCDC6002042EA /* SDL */,
 				DDDAF9E61BCCCDC6002042EA /* Products */,
@@ -216,6 +216,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -227,6 +228,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -251,6 +253,7 @@
 				DDDAF9EE1BCCCDC6002042EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
