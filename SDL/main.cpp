@@ -10,6 +10,7 @@
 #include <ctime>
 #include <stack>
 #include <unordered_set>
+#include <utility>
 
 using namespace std;
 
@@ -55,7 +56,7 @@ bool init()
         }
         
         //Create window
-        gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+        gWindow = SDL_CreateWindow( "Maze", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
         if( gWindow == NULL )
         {
             printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -139,9 +140,12 @@ SDL_Texture* loadTexture( std::string path )
 }
 
 struct Cell {
-    int x;      // position
+    int x;      // coordinates
     int y;
     int size;
+    
+    int parent_x;   // to show answer
+    int parent_y;
     
     bool up;
     bool down;
@@ -154,13 +158,30 @@ struct Cell {
     }
 };
 
+const int m = 25;              // the number of rows
+const int n = 35;              // the number of columns
+const int size = 25;
+
 void drawRect(const Cell &r) {
     
-    int offset = 20;
+    int offset = 40;
     
-    SDL_Rect rect = {r.y + offset, r.x + offset, r.size, r.size};
-	SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
-	SDL_RenderDrawRect( gRenderer, &rect);
+    //SDL_Rect rect = {r.y + offset, r.x + offset, r.size, r.size};
+	//SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
+	//SDL_RenderDrawRect( gRenderer, &rect);
+    SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
+    if (!r.up) {
+        SDL_RenderDrawLine( gRenderer, r.y + offset , r.x + offset, (r.y + size) + offset, r.x + offset );
+    }
+    if (!r.down) {
+        SDL_RenderDrawLine( gRenderer, r.y + offset , (r.x + size) + offset, (r.y + size) + offset, (r.x + size) + offset );
+    }
+    if (!r.left) {
+        SDL_RenderDrawLine( gRenderer, r.y + offset , r.x + offset, r.y + offset, (r.x + size) + offset );
+    }
+    if (!r.right) {
+        SDL_RenderDrawLine( gRenderer, (r.y + size) + offset , r.x + offset, (r.y + size) + offset, (r.x + size ) + offset );
+    }
 }
 
 void displayBoard(const vector<vector<Cell>> &board) {
@@ -175,12 +196,22 @@ int getRand4() {
     return rand() % 4;
 }
 
-const int m = 30;              // the number of rows
-const int n = 40;              // the number of columns
 vector<vector<bool>> visited(m, vector<bool>(n, false));
 
+vector<int> getRandomPermutation4() {
+    vector<int> ret;
+    unordered_set<int> s;
+    while (s.size() < 4) {
+        int temp = getRand4();
+        if (s.find(temp) == s.end()) {
+            ret.push_back(temp);
+        }
+        s.insert(temp);
+    }
+    return ret;
+}
+
 int getRandomLegalDirection(int i, int j, const vector<vector<Cell>> &board) {
-    int count = 0;
     unordered_set<int>  tried;
     while (tried.size() < 4) {
         int rand = getRand4();
@@ -202,50 +233,49 @@ int getRandomLegalDirection(int i, int j, const vector<vector<Cell>> &board) {
                 return 3;
             }
         }
-        count++;
     }
     // no feasible direction
     return -1;
 }
 
-vector<int> getRandomPermutation4() {
-    vector<int> ret;
-    unordered_set<int> s;
-    while (s.size() < 4) {
-        int temp = getRand4();
-        s.insert(temp);
-        if (s.find(temp) == s.end()) {
-            ret.push_back(temp);
-        }
-    }
-    return ret;
-}
-
 
 void getPath(vector<vector<Cell>> &board) {
-    stack<Cell> stk;
-    stk.push(board[0][0]);
+    stack<pair<int, int>> stk;
+    stk.push(make_pair(0, 0));
     while (!stk.empty()) {
-        Cell temp = stk.top();
-        stk.pop();
-        int x = temp.x;
-        int y = temp.y;
+        auto temp = stk.top();
+        int x = temp.first;
+        int y = temp.second;
         visited[x][y] = true;
-        // push all possible move to stack
-        vector<int> sequence = getRandomPermutation4();
         
-        for (int i = 0; i < 4; i++) {
-            if (sequence[i] == 0) {
-                
-            } else if
+        // push only one possible move to stack
+        int direction = getRandomLegalDirection(x, y, board);
+        if (direction == 0) {       // up
+            board[x][y].up = true;
+            board[x-1][y].down = true;
+            stk.push(make_pair(x-1, y));
+        } else if (direction == 1) {        // down
+            board[x][y].down = true;
+            board[x+1][y].up = true;
+            stk.push(make_pair(x+1, y));
+        } else if (direction == 2) {        // left
+            board[x][y].left = true;
+            board[x][y-1].right = true;
+            stk.push(make_pair(x, y-1));
+        } else if (direction == 3) {        // right
+            board[x][y].right = true;
+            board[x][y+1].left = true;
+            stk.push(make_pair(x, y+1));
+        } else {
+            stk.pop();
         }
      }
 }
 
 
+
 int main( int argc, char* args[] )
 {
-    const int size = 20;
     // do computation here
     vector<vector<Cell>> board(m, vector<Cell>(n, Cell(size)));
     srand((int)time(0));
@@ -256,6 +286,11 @@ int main( int argc, char* args[] )
             board[i][j].y = j * size;
         }
     }
+    
+    getPath(board);
+    
+    board[0][0].up = true;
+    board[m-1][n-1].down = true;
     
     //Start up SDL and create window
     if( !init() )
