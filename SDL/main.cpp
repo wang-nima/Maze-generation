@@ -144,7 +144,7 @@ struct Cell {
     int y;
     int size;
     
-    int parent_x;   // to show answer
+    int parent_x;   // these two field may need to generate the solution
     int parent_y;
     
     bool up;
@@ -158,9 +158,11 @@ struct Cell {
     }
 };
 
-const int m = 25;              // the number of rows
-const int n = 35;              // the number of columns
-const int size = 25;
+int granularity = 5;
+
+const int m = 25 * granularity;              // the number of rows
+const int n = 35 * granularity;              // the number of columns
+const int size = 25 / granularity;
 
 void drawRect(const Cell &r) {
     
