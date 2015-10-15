@@ -158,7 +158,7 @@ struct Cell {
     }
 };
 
-int granularity = 5;
+int granularity = 2;
 
 const int m = 25 * granularity;              // the number of rows
 const int n = 35 * granularity;              // the number of columns
